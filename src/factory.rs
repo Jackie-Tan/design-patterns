@@ -3,7 +3,6 @@ pub trait Button {
     fn on_click(&self);
 }
 struct WindowsButton {}
-struct HTMLButton {}
 impl Button for WindowsButton {
     fn render(&self) {
         println!("Rendering Windows button");
@@ -13,6 +12,8 @@ impl Button for WindowsButton {
         println!("Clicking Windows button")
     }
 }
+
+struct HTMLButton {}
 impl Button for HTMLButton {
     fn render(&self) {
         println!("Rendering HTML button");
