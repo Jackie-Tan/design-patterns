@@ -1,6 +1,9 @@
 mod factory;
 use factory::{Dialog, WebDialog, WindowsDialog};
 
+mod builder;
+use builder::Builder;
+
 struct Application {
     dialog: Box<dyn Dialog>,
 }
@@ -28,4 +31,13 @@ fn main() {
     /* Factory method */
     let app = Application::new();
     app.dialog.render();
+
+    /* Builder method */
+    let car = builder::CarBuilder::new()
+        .set_seats(4)
+        .set_engine("V12 engine".to_string())
+        .set_trip_computer(true)
+        .set_gps(true)
+        .get_product();
+    println!("{:?}", car);
 }
