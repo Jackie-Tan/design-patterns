@@ -1,4 +1,4 @@
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone)]
 pub struct Car {
     seats: u8,
     engine: String,
@@ -7,7 +7,7 @@ pub struct Car {
 }
 
 pub trait Builder {
-    fn reset(self) -> Self;
+    fn reset(&mut self);
     fn set_seats(self, num_of_seats: u8) -> Self;
     fn set_engine(self, engine_name: String) -> Self;
     fn set_trip_computer(self, is_required: bool) -> Self;
@@ -24,15 +24,16 @@ impl CarBuilder {
         CarBuilder::default()
     }
 
-    pub fn get_product(self) -> Car {
-        self.car
+    pub fn get_product(&mut self) -> Car {
+        let car = self.car.clone();
+        self.reset();
+        car
     }
 }
 
 impl Builder for CarBuilder {
-    fn reset(mut self) -> Self {
-        self = CarBuilder::default();
-        self
+    fn reset(&mut self) {
+        *self = CarBuilder::default();
     }
 
     fn set_seats(mut self, num_of_seats: u8) -> Self {
@@ -57,5 +58,16 @@ impl Builder for CarBuilder {
             self.car.gps = Some("Good GPS".to_string());
         }
         self
+    }
+}
+
+pub struct Director;
+impl Director {
+    pub fn construct_sport_car(self, mut builder: impl Builder) {
+        builder.reset();
+        builder.set_seats(2)
+        .set_engine("Sport Engine".to_string())
+        .set_trip_computer(true)
+        .set_gps(true);
     }
 }

@@ -40,4 +40,9 @@ fn main() {
         .set_gps(true)
         .get_product();
     println!("{:?}", car);
+
+    let director = builder::Director;
+    let mut car_builder = builder::CarBuilder::new();
+    director.construct_sport_car(car_builder);
+    let sport_car = car_builder.get_product();
 }
