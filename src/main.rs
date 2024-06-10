@@ -2,7 +2,7 @@ mod factory;
 use factory::{Dialog, WebDialog, WindowsDialog};
 
 mod builder;
-use builder::Builder;
+use builder::{Builder, Director};
 
 struct Application {
     dialog: Box<dyn Dialog>,
@@ -33,6 +33,7 @@ fn main() {
     app.dialog.render();
 
     /* Builder method */
+    // The client could control the builders directly.
     let car = builder::CarBuilder::new()
         .set_seats(4)
         .set_engine("V12 engine".to_string())
@@ -41,8 +42,10 @@ fn main() {
         .get_product();
     println!("{:?}", car);
 
-    let director = builder::Director;
+    // The client could also use a director (if available)
+    // for executing the building steps in a particular sequence.
     let mut car_builder = builder::CarBuilder::new();
-    director.construct_sport_car(car_builder);
+    Director::construct_sport_car(&mut car_builder);
     let sport_car = car_builder.get_product();
+    println!("{:?}", sport_car);
 }
