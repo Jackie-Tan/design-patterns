@@ -39,13 +39,13 @@ fn main() {
         .set_engine("V12 engine".to_string())
         .set_trip_computer(true)
         .set_gps(true)
-        .get_product();
+        .build();
     println!("{:?}", car);
 
     // The client could also use a director (if available)
     // for executing the building steps in a particular sequence.
     let mut car_builder = builder::CarBuilder::new();
     Director::construct_sport_car(&mut car_builder);
-    let sport_car = car_builder.get_product();
+    let sport_car = car_builder.build();
     println!("{:?}", sport_car);
 }

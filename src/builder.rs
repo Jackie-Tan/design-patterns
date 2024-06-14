@@ -1,4 +1,4 @@
-#[derive(Default, Debug, Clone)]
+#[derive(Debug)]
 pub struct Car {
     seats: u8,
     engine: String,
@@ -7,55 +7,55 @@ pub struct Car {
 }
 
 pub trait Builder {
-    fn reset(&mut self);
     fn set_seats(&mut self, num_of_seats: u8) -> &mut Self;
     fn set_engine(&mut self, engine_name: String) -> &mut Self;
     fn set_trip_computer(&mut self, is_required: bool) -> &mut Self;
     fn set_gps(&mut self, is_required: bool) -> &mut Self;
 }
 
-#[derive(Default)]
-pub struct CarBuilder {
-    car: Car,
-}
+pub struct CarBuilder(Car);
 
 impl CarBuilder {
-    pub fn new() -> CarBuilder {
-        CarBuilder::default()
+    pub fn new() -> Self {
+        CarBuilder(Car {
+            seats: u8::default(),
+            engine: String::default(),
+            trip_computer: None,
+            gps: None,
+        })
     }
 
-    pub fn get_product(&mut self) -> Car {
-        let car = self.car.clone();
-        self.reset();
-        car
+    pub fn build(&self) -> Car {
+        Car {
+            seats: self.0.seats,
+            engine: self.0.engine.clone(),
+            trip_computer: self.0.trip_computer.clone(),
+            gps: self.0.gps.clone(),
+        }
     }
 }
 
 impl Builder for CarBuilder {
-    fn reset(&mut self) {
-        *self = CarBuilder::default();
-    }
-
     fn set_seats(&mut self, num_of_seats: u8) -> &mut Self {
-        self.car.seats = num_of_seats;
+        self.0.seats = num_of_seats;
         self
     }
 
     fn set_engine(&mut self, engine_name: String) -> &mut Self {
-        self.car.engine = engine_name;
+        self.0.engine = engine_name;
         self
     }
 
     fn set_trip_computer(&mut self, is_required: bool) -> &mut Self {
         if is_required {
-            self.car.trip_computer = Some("Good Trip Computer".to_string());
+            self.0.trip_computer = Some("Good Trip Computer".to_string());
         }
         self
     }
 
     fn set_gps(&mut self, is_required: bool) -> &mut Self {
         if is_required {
-            self.car.gps = Some("Good GPS".to_string());
+            self.0.gps = Some("Good GPS".to_string());
         }
         self
     }
@@ -64,7 +64,6 @@ impl Builder for CarBuilder {
 pub struct Director;
 impl Director {
     pub fn construct_sport_car(builder: &mut impl Builder) {
-        builder.reset();
         builder
             .set_seats(2)
             .set_engine("Sport Engine".to_string())
